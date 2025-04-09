@@ -1,0 +1,98 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  ubuntu-build:
+    name: Build on Ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Show Java version
+        run: java -version
+
+      - name: Show Maven version
+        run: mvn -v
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ubuntu-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ubuntu-maven-
+
+      - name: Build with Maven
+        run: mvn clean install -B
+
+  windows-build:
+    name: Build on Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Show Java version
+        run: java -version
+
+      - name: Show Maven version
+        run: mvn -v
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: windows-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: windows-maven-
+
+      - name: Build with Maven
+        run: mvn clean verify
+
+  macos-build:
+    name: Build on macOS
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Show Java version
+        run: java -version
+
+      - name: Show Maven version
+        run: mvn -v
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: macos-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: macos-maven-
+
+      - name: Build with Maven
+        run: mvn clean install -B
